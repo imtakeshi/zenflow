@@ -6,8 +6,8 @@ export type SoundOption = "rain" | "ocean" | "forest" | "silence";
 
 const SOUND_PATHS: Record<Exclude<SoundOption, "silence">, string> = {
   rain: "https://bigsoundbank.com/UPLOAD/mp3/1290.mp3",
-  ocean: "/sounds/ocean.mp3",
-  forest: "/sounds/forest.mp3",
+  ocean: "https://bigsoundbank.com/UPLOAD/mp3/0267.mp3",
+  forest: "https://bigsoundbank.com/UPLOAD/mp3/0100.mp3",
 };
 
 export function useAmbientSound() {
