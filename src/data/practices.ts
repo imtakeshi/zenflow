@@ -1,0 +1,41 @@
+import type { LucideIcon } from "lucide-react";
+import { Moon, Brain, Heart, Wind } from "lucide-react";
+
+export type Practice = {
+  id: string;
+  name: string;
+  duration: number;
+  icon: LucideIcon;
+  gradient: string;
+};
+
+export const practices: Practice[] = [
+  {
+    id: "deep-sleep",
+    name: "Глубокий сон",
+    duration: 10,
+    icon: Moon,
+    gradient: "from-indigo-400/30 to-purple-500/30",
+  },
+  {
+    id: "focus",
+    name: "Фокус",
+    duration: 5,
+    icon: Brain,
+    gradient: "from-amber-400/30 to-orange-500/30",
+  },
+  {
+    id: "antistress",
+    name: "Антистресс",
+    duration: 15,
+    icon: Heart,
+    gradient: "from-rose-400/30 to-pink-500/30",
+  },
+  {
+    id: "breath",
+    name: "Дыхание",
+    duration: 5,
+    icon: Wind,
+    gradient: "from-cyan-400/30 to-teal-500/30",
+  },
+];

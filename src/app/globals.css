@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --zen-bg: #F8FAFC;
+  --zen-surface: #F1F5F9;
+  --zen-text: #475569;
+  --zen-text-dark: #334155;
+}
+
+.dark {
+  --zen-bg: #0F172A;
+  --zen-surface: #1E293B;
+  --zen-text: #94A3B8;
+  --zen-text-dark: #E2E8F0;
+}
+
+body {
+  background-color: var(--zen-bg);
+  color: var(--zen-text-dark);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
