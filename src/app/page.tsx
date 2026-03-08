@@ -9,10 +9,12 @@ import { practices } from "@/data/practices";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SplashScreen } from "@/components/SplashScreen";
 import { NamePrompt } from "@/components/NamePrompt";
+import { Sidebar } from "@/components/Sidebar";
 import Link from "next/link";
 import { Clock } from "lucide-react";
 
 export default function Dashboard() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const { totalMinutes } = useMeditationStats();
   const { name, setName, hasName, isReady } = useUserName();
   const [splashDone, setSplashDone] = useState(false);
@@ -24,8 +26,18 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-slate-700 dark:text-slate-200">
       {!splashDone && <SplashScreen onComplete={() => setSplashDone(true)} />}
       {splashDone && isReady && !hasName && <NamePrompt onSubmit={setName} />}
+      <Sidebar isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
 
-      <header className="flex justify-end p-4">
+      <header className="flex justify-between items-center p-4">
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="p-2 rounded-full bg-slate-200/80 dark:bg-slate-700/50 hover:bg-slate-300/80"
+          aria-label="Меню"
+        >
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
         <ThemeToggle />
       </header>
 

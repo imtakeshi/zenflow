@@ -8,6 +8,7 @@ import { useTimer } from "@/hooks/useTimer";
 import { useMeditationStats } from "@/hooks/useMeditationStats";
 import { useAmbientSound, type SoundOption } from "@/hooks/useAmbientSound";
 import { BreathingCircle } from "@/components/BreathingCircle";
+import { Sidebar } from "@/components/Sidebar";
 import { formatTime } from "@/lib/utils";
 import Link from "next/link";
 
@@ -25,6 +26,7 @@ function SessionContent() {
   const name = searchParams.get("name") || "Медитация";
 
   const [showComplete, setShowComplete] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { addMinutes } = useMeditationStats();
   const handleTimerComplete = () => {
     addMinutes(duration);
@@ -51,7 +53,17 @@ function SessionContent() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-slate-700 dark:text-slate-200 flex flex-col items-center justify-center px-4">
-      <header className="absolute top-0 right-0 p-4">
+      <Sidebar isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <header className="absolute top-0 left-0 right-0 flex justify-between p-4">
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="p-2 rounded-full bg-slate-200/80 dark:bg-slate-700/50 hover:bg-slate-300/80"
+          aria-label="Меню"
+        >
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
         <Link
           href="/"
           className="p-2 rounded-full bg-slate-200/80 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-600/50"
