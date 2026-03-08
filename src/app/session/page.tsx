@@ -13,6 +13,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { formatTime } from "@/lib/utils";
 import { recordMeditationDay } from "@/lib/streaks";
 import { addJournalEntry } from "@/lib/journalStorage";
+import { addSession } from "@/lib/meditationSession";
 import Link from "next/link";
 
 const SOUND_OPTIONS: { id: SoundOption; label: string; Icon: typeof CloudRain }[] = [
@@ -56,8 +57,14 @@ function SessionContent() {
   useEffect(() => () => stop(), [stop]);
 
   const handleCloseModal = () => {
-    if (journalText.trim() && completedDuration > 0) {
-      addJournalEntry(completedDuration, journalText.trim());
+    if (completedDuration > 0) {
+      const today = new Date().toISOString().slice(0, 10);
+      addSession({
+        date: today,
+        durationMinutes: completedDuration,
+        note: journalText.trim() || undefined,
+      });
+      if (journalText.trim()) addJournalEntry(completedDuration, journalText.trim());
     }
     setShowComplete(false);
     setJournalText("");
