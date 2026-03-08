@@ -1,19 +1,30 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { getGreeting } from "@/lib/utils";
 import { useMeditationStats } from "@/hooks/useMeditationStats";
+import { useUserName } from "@/hooks/useUserName";
 import { practices } from "@/data/practices";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SplashScreen } from "@/components/SplashScreen";
+import { NamePrompt } from "@/components/NamePrompt";
 import Link from "next/link";
 import { Clock } from "lucide-react";
 
 export default function Dashboard() {
   const { totalMinutes } = useMeditationStats();
+  const { name, setName, hasName, isReady } = useUserName();
+  const [splashDone, setSplashDone] = useState(false);
+
   const greeting = getGreeting();
+  const greetingText = name ? `${greeting}, ${name}` : greeting;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-slate-700 dark:text-slate-200">
+      {!splashDone && <SplashScreen onComplete={() => setSplashDone(true)} />}
+      {splashDone && isReady && !hasName && <NamePrompt onSubmit={setName} />}
+
       <header className="flex justify-end p-4">
         <ThemeToggle />
       </header>
@@ -25,7 +36,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          {greeting}
+          {greetingText}
         </motion.h1>
         <motion.p
           className="text-3xl font-semibold text-slate-800 dark:text-slate-100 mb-8"
