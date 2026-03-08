@@ -21,8 +21,11 @@ export function useAmbientSound() {
   const [currentSound, setCurrentSound] = useState<SoundOption>("silence");
 
   const play = useCallback((option: SoundOption) => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+    const prev = audioRef.current;
+    if (prev) {
+      prev.pause();
+      prev.currentTime = 0;
+      prev.src = "";
       audioRef.current = null;
     }
     if (option === "silence") {
@@ -35,24 +38,18 @@ export function useAmbientSound() {
     audio.loop = true;
     audio.volume = 0.4;
     audioRef.current = audio;
-    audio.onerror = () => {
-      if (src !== fallback) {
-        const fallbackAudio = new Audio(fallback);
-        fallbackAudio.loop = true;
-        fallbackAudio.volume = 0.4;
-        audioRef.current = fallbackAudio;
-        fallbackAudio.play().catch(() => {});
-      }
+    let fallbackUsed = false;
+    const tryFallback = () => {
+      if (fallbackUsed || src === fallback) return;
+      fallbackUsed = true;
+      const fallbackAudio = new Audio(fallback);
+      fallbackAudio.loop = true;
+      fallbackAudio.volume = 0.4;
+      audioRef.current = fallbackAudio;
+      fallbackAudio.play().catch(() => {});
     };
-    audio.play().catch(() => {
-      if (src !== fallback) {
-        const fallbackAudio = new Audio(fallback);
-        fallbackAudio.loop = true;
-        fallbackAudio.volume = 0.4;
-        audioRef.current = fallbackAudio;
-        fallbackAudio.play().catch(() => {});
-      }
-    });
+    audio.onerror = tryFallback;
+    audio.play().catch(tryFallback);
     setCurrentSound(option);
   }, []);
 
