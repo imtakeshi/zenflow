@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("Affirmation API error:", err);
     return NextResponse.json(
-      { error: "Ошибка при создании аффирмации. Проверьте API-ключ." },
+      { error: String(err) },
       { status: 500 }
     );
   }
