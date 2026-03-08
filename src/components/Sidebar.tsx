@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { X, Calendar, CalendarDays, CalendarRange, Timer, BookOpen, Wind, BookMarked, Bell } from "lucide-react";
+import { X, Calendar, CalendarDays, CalendarRange, Timer, BookOpen, Wind, BookMarked, Bell, Calendar as CalendarIcon } from "lucide-react";
 
 type Props = {
   isOpen: boolean;
@@ -10,6 +10,7 @@ type Props = {
 };
 
 const items = [
+  { href: "/calendar", label: "Календарь", Icon: CalendarIcon },
   { href: "/timer", label: "Таймер медитации", Icon: Timer },
   { href: "/guided", label: "Гид по темам", Icon: BookOpen },
   { href: "/breath", label: "Дыхательные упражнения", Icon: Wind },
