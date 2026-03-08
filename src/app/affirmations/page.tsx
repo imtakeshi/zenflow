@@ -13,7 +13,7 @@ const LABELS: Record<string, string> = {
   month: "Аффирмация месяца",
 };
 
-const CACHE_KEY = "zenflow_affirmations";
+const CACHE_KEY = "zenflow_affirmations_v2";
 
 function getCacheKey(period: string): string {
   const now = new Date();
