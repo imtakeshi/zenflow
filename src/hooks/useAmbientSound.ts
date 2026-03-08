@@ -5,7 +5,7 @@ import { useRef, useCallback, useState } from "react";
 export type SoundOption = "rain" | "ocean" | "forest" | "silence";
 
 const SOUND_PATHS: Record<Exclude<SoundOption, "silence">, string> = {
-  rain: "/sounds/rain.mp3",
+  rain: "/sounds/звук.mp3",
   ocean: "https://bigsoundbank.com/UPLOAD/mp3/0267.mp3",
   forest: "https://bigsoundbank.com/UPLOAD/mp3/0100.mp3",
 };
