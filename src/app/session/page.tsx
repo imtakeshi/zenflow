@@ -7,9 +7,12 @@ import { Pause, Play, X, CloudRain, Waves, Trees, VolumeX } from "lucide-react";
 import { useTimer } from "@/hooks/useTimer";
 import { useMeditationStats } from "@/hooks/useMeditationStats";
 import { useAmbientSound, type SoundOption } from "@/hooks/useAmbientSound";
+import { useSessionSounds } from "@/hooks/useSessionSounds";
 import { BreathingCircle } from "@/components/BreathingCircle";
 import { Sidebar } from "@/components/Sidebar";
 import { formatTime } from "@/lib/utils";
+import { recordMeditationDay } from "@/lib/streaks";
+import { addJournalEntry } from "@/lib/journalStorage";
 import Link from "next/link";
 
 const SOUND_OPTIONS: { id: SoundOption; label: string; Icon: typeof CloudRain }[] = [
@@ -23,13 +26,21 @@ function SessionContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const duration = Math.min(60, Math.max(1, parseInt(searchParams.get("duration") || "5", 10)));
+  const intervalParam = Math.max(0, parseInt(searchParams.get("interval") || "0", 10));
   const name = searchParams.get("name") || "Медитация";
 
   const [showComplete, setShowComplete] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [journalText, setJournalText] = useState("");
+  const [completedDuration, setCompletedDuration] = useState(0);
   const { addMinutes } = useMeditationStats();
+  const { playGong, checkIntervalBell } = useSessionSounds(intervalParam);
+
   const handleTimerComplete = () => {
     addMinutes(duration);
+    recordMeditationDay();
+    setCompletedDuration(duration);
+    playGong();
     setShowComplete(true);
   };
   const { secondsLeft, isRunning, toggle } = useTimer(
@@ -38,16 +49,31 @@ function SessionContent() {
   );
   const { currentSound, play, stop } = useAmbientSound();
 
+  useEffect(() => {
+    checkIntervalBell(duration * 60, secondsLeft);
+  }, [secondsLeft, duration, checkIntervalBell]);
+
   useEffect(() => () => stop(), [stop]);
 
   const handleCloseModal = () => {
+    if (journalText.trim() && completedDuration > 0) {
+      addJournalEntry(completedDuration, journalText.trim());
+    }
     setShowComplete(false);
+    setJournalText("");
     router.push("/");
   };
 
   const handleFinish = () => {
     const completedMinutes = Math.ceil((duration * 60 - secondsLeft) / 60);
-    if (completedMinutes > 0) addMinutes(completedMinutes);
+    if (completedMinutes > 0) {
+      addMinutes(completedMinutes);
+      recordMeditationDay();
+      setCompletedDuration(completedMinutes);
+    } else {
+      setCompletedDuration(0);
+    }
+    playGong();
     setShowComplete(true);
   };
 
@@ -153,9 +179,21 @@ function SessionContent() {
               <h3 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
                 Отлично!
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">
+              <p className="text-slate-600 dark:text-slate-400 mb-4">
                 Сессия завершена. Вы молодец!
               </p>
+              <div className="mb-4 text-left">
+                <label className="block text-sm text-slate-500 dark:text-slate-400 mb-1">
+                  Запись в журнал (необязательно)
+                </label>
+                <textarea
+                  value={journalText}
+                  onChange={(e) => setJournalText(e.target.value)}
+                  placeholder="Как вы себя чувствуете? Благодарность, мысли..."
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-sm resize-none h-20"
+                  rows={3}
+                />
+              </div>
               <motion.button
                 onClick={handleCloseModal}
                 className="w-full py-3 rounded-xl bg-slate-800 dark:bg-slate-700 text-white font-medium"

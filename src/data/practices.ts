@@ -39,3 +39,9 @@ export const practices: Practice[] = [
     gradient: "from-cyan-400/30 to-teal-500/30",
   },
 ];
+
+export const microPractices: Practice[] = [
+  { id: "micro-1", name: "1 минута", duration: 1, icon: Wind, gradient: "from-slate-400/30 to-slate-500/30" },
+  { id: "micro-2", name: "2 минуты", duration: 2, icon: Wind, gradient: "from-slate-400/30 to-slate-500/30" },
+  { id: "micro-3", name: "3 минуты", duration: 3, icon: Wind, gradient: "from-slate-400/30 to-slate-500/30" },
+];

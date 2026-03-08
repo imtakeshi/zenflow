@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { X, Calendar, CalendarDays, CalendarRange } from "lucide-react";
+import { X, Calendar, CalendarDays, CalendarRange, Timer, BookOpen, Wind, BookMarked, Bell } from "lucide-react";
 
 type Props = {
   isOpen: boolean;
@@ -10,9 +10,14 @@ type Props = {
 };
 
 const items = [
+  { href: "/timer", label: "Таймер медитации", Icon: Timer },
+  { href: "/guided", label: "Гид по темам", Icon: BookOpen },
+  { href: "/breath", label: "Дыхательные упражнения", Icon: Wind },
   { href: "/affirmations?period=day", label: "Аффирмация на день", Icon: Calendar },
   { href: "/affirmations?period=week", label: "Аффирмация на неделю", Icon: CalendarDays },
   { href: "/affirmations?period=month", label: "Аффирмация месяца", Icon: CalendarRange },
+  { href: "/journal", label: "Журнал", Icon: BookMarked },
+  { href: "/reminders", label: "Напоминания", Icon: Bell },
 ];
 
 export function Sidebar({ isOpen, onClose }: Props) {
