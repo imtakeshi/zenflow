@@ -20,46 +20,46 @@ export function useAmbientSound() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentSound, setCurrentSound] = useState<SoundOption>("silence");
 
-  const play = useCallback((option: SoundOption) => {
-    const prev = audioRef.current;
-    if (prev) {
-      prev.pause();
-      prev.currentTime = 0;
-      prev.src = "";
-      audioRef.current = null;
+  const stopCurrent = useCallback(() => {
+    const a = audioRef.current;
+    if (a) {
+      a.pause();
+      a.removeAttribute("src");
+      a.load();
     }
+  }, []);
+
+  const play = useCallback((option: SoundOption) => {
+    stopCurrent();
     if (option === "silence") {
       setCurrentSound("silence");
       return;
     }
     const src = SOUND_PATHS[option];
     const fallback = FALLBACK_URLS[option];
-    const audio = new Audio(src);
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+    const audio = audioRef.current;
     audio.loop = true;
     audio.volume = 0.4;
-    audioRef.current = audio;
+    audio.src = src;
     let fallbackUsed = false;
     const tryFallback = () => {
       if (fallbackUsed || src === fallback) return;
       fallbackUsed = true;
-      const fallbackAudio = new Audio(fallback);
-      fallbackAudio.loop = true;
-      fallbackAudio.volume = 0.4;
-      audioRef.current = fallbackAudio;
-      fallbackAudio.play().catch(() => {});
+      audio.src = fallback;
+      audio.play().catch(() => {});
     };
     audio.onerror = tryFallback;
     audio.play().catch(tryFallback);
     setCurrentSound(option);
-  }, []);
+  }, [stopCurrent]);
 
   const stop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+    stopCurrent();
     setCurrentSound("silence");
-  }, []);
+  }, [stopCurrent]);
 
   return { currentSound, play, stop };
 }
