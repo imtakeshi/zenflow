@@ -4,10 +4,12 @@ import { useRef, useCallback, useState } from "react";
 
 export type SoundOption = "rain" | "ocean" | "forest" | "silence";
 
+// Локальный файл: положите свой MP3 в public/sounds/
+// Остальные — встроенные ссылки
 const SOUND_PATHS: Record<Exclude<SoundOption, "silence">, string> = {
   rain: "/sounds/rain.mp3",
-  ocean: "/sounds/ocean.mp3",
-  forest: "/sounds/forest.mp3",
+  ocean: "https://bigsoundbank.com/UPLOAD/mp3/0267.mp3",
+  forest: "https://bigsoundbank.com/UPLOAD/mp3/0100.mp3",
 };
 
 export function useAmbientSound() {
