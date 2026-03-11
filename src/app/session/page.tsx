@@ -56,7 +56,7 @@ function SessionContent() {
 
   useEffect(() => () => stop(), [stop]);
 
-  const handleCloseModal = () => {
+  const finalizeSession = (redirectTo: string) => {
     if (completedDuration > 0) {
       const today = new Date().toISOString().slice(0, 10);
       addSession({
@@ -68,7 +68,19 @@ function SessionContent() {
     }
     setShowComplete(false);
     setJournalText("");
-    router.push("/");
+    router.push(redirectTo);
+  };
+
+  const handleCloseModal = () => {
+    finalizeSession("/");
+  };
+
+  const handleGoToJournal = () => {
+    finalizeSession("/journal");
+  };
+
+  const handleGoToCalendar = () => {
+    finalizeSession("/calendar");
   };
 
   const handleFinish = () => {
@@ -201,13 +213,31 @@ function SessionContent() {
                   rows={3}
                 />
               </div>
-              <motion.button
-                onClick={handleCloseModal}
-                className="w-full py-3 rounded-xl bg-slate-800 dark:bg-slate-700 text-white font-medium"
-                whileTap={{ scale: 0.98 }}
-              >
-                На главную
-              </motion.button>
+              <div className="space-y-2">
+                <motion.button
+                  onClick={handleCloseModal}
+                  className="w-full py-3 rounded-xl bg-slate-800 dark:bg-slate-700 text-white font-medium"
+                  whileTap={{ scale: 0.98 }}
+                >
+                  На главную
+                </motion.button>
+                <div className="flex gap-2">
+                  <motion.button
+                    onClick={handleGoToJournal}
+                    className="flex-1 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm"
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    К журналу
+                  </motion.button>
+                  <motion.button
+                    onClick={handleGoToCalendar}
+                    className="flex-1 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm"
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    К календарю
+                  </motion.button>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}

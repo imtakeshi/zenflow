@@ -2,9 +2,8 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  getStreakData,
-} from "@/lib/streaks";
+import Link from "next/link";
+import { getStreakData } from "@/lib/streaks";
 import {
   getMinutesForDate,
   getSessionsForDate,
@@ -13,6 +12,7 @@ import {
   type MeditationSession,
 } from "@/lib/meditationSession";
 import { getCalendarData } from "@/lib/calendarStorage";
+import { getDailyMeditation } from "@/data/guided";
 
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const MONTHS =
@@ -86,6 +86,12 @@ function DayModal({ dateStr, onClose, onUpdate }: DayModalProps) {
   const dateLabel = d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
   const isToday = dateStr === new Date().toISOString().slice(0, 10);
 
+  const lastSession = sessions.length > 0 ? sessions[sessions.length - 1] : null;
+  const daily = getDailyMeditation();
+  const repeatUrl = lastSession
+    ? `/session?duration=${lastSession.durationMinutes}&name=${encodeURIComponent("Повтор прошлой сессии")}`
+    : `/session?duration=${daily.duration}&name=${encodeURIComponent(daily.name)}`;
+
   const handleSaveQuick = () => {
     const min = parseInt(quickMinutes, 10);
     if (min > 0 && min <= 120) {
@@ -131,6 +137,24 @@ function DayModal({ dateStr, onClose, onUpdate }: DayModalProps) {
           <div>
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Всего минут</p>
             <p className="text-2xl font-semibold text-slate-800 dark:text-slate-100">{totalMinutes} мин</p>
+          </div>
+
+          <div>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">Быстрые действия</p>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={repeatUrl}
+                className="px-3 py-1.5 rounded-xl bg-slate-800 dark:bg-slate-700 text-white text-xs font-medium hover:bg-slate-700 dark:hover:bg-slate-600"
+              >
+                {lastSession ? "Повторить медитацию" : "Медитация дня"}
+              </Link>
+              <Link
+                href="/journal"
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-600 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
+              >
+                Открыть журнал
+              </Link>
+            </div>
           </div>
 
           {sessions.length > 0 && (

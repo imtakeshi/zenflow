@@ -5,11 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Bell } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
-import {
-  getReminders,
-  saveReminders,
-  type Reminder,
-} from "@/lib/remindersStorage";
+import { getReminders, saveReminders, type Reminder } from "@/lib/remindersStorage";
 
 export default function RemindersPage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -57,6 +53,19 @@ export default function RemindersPage() {
     saveReminders(next);
   };
 
+  const permissionText =
+    permission === "granted"
+      ? "Уведомления включены — напоминания будут приходить в указанное время."
+      : permission === "denied"
+      ? "Уведомления заблокированы в настройках браузера. Чтобы включить, откройте настройки сайта."
+      : "Браузер ещё не спросил про уведомления. Нажмите кнопку ниже, чтобы разрешить.";
+
+  const setPresetTime = (preset: "morning" | "day" | "evening") => {
+    if (preset === "morning") setTime("08:00");
+    if (preset === "day") setTime("13:00");
+    if (preset === "evening") setTime("21:00");
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 text-slate-700 dark:text-slate-200">
       <Sidebar isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
@@ -79,8 +88,11 @@ export default function RemindersPage() {
         <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
           Напоминания
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">
-          Уведомления приходят, когда приложение открыто или в фоне. Разрешите уведомления в браузере.
+        <p className="text-slate-600 dark:text-slate-400 text-sm mb-2">
+          Уведомления приходят, когда приложение открыто или в фоне.
+        </p>
+        <p className="text-slate-500 dark:text-slate-400 text-xs mb-6">
+          {permissionText}
         </p>
 
         {permission !== "granted" && (
@@ -90,7 +102,7 @@ export default function RemindersPage() {
             animate={{ opacity: 1 }}
           >
             <p className="text-sm text-slate-700 dark:text-slate-300 mb-3">
-              Чтобы получать напоминания, разрешите уведомления для этого сайта.
+              Чтобы получать напоминания, нажмите на кнопку ниже и разрешите уведомления для этого сайта.
             </p>
             <button
               onClick={requestPermission}
@@ -113,6 +125,29 @@ export default function RemindersPage() {
                 onChange={(e) => setTime(e.target.value)}
                 className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100"
               />
+            </div>
+            <div className="flex gap-2 pl-14">
+              <button
+                type="button"
+                onClick={() => setPresetTime("morning")}
+                className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+              >
+                Утро · 08:00
+              </button>
+              <button
+                type="button"
+                onClick={() => setPresetTime("day")}
+                className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+              >
+                День · 13:00
+              </button>
+              <button
+                type="button"
+                onClick={() => setPresetTime("evening")}
+                className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+              >
+                Вечер · 21:00
+              </button>
             </div>
             <div className="flex gap-2 items-start">
               <label className="text-slate-500 dark:text-slate-400 text-sm w-14 pt-2">Текст</label>

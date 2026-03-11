@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAffirmation } from "@/data/affirmations";
+import { getAffirmation, type AffirmationCategory } from "@/data/affirmations";
 
 export async function GET(request: NextRequest) {
   const period = (request.nextUrl.searchParams.get("period") || "day") as "day" | "week" | "month";
@@ -7,6 +7,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid period" }, { status: 400 });
   }
 
-  const affirmation = getAffirmation(period);
-  return NextResponse.json({ affirmation, period });
+  const categoryParam = (request.nextUrl.searchParams.get("category") || "any") as
+    | AffirmationCategory
+    | "any";
+
+  const affirmation = getAffirmation(period, categoryParam);
+  return NextResponse.json({ affirmation, period, category: categoryParam });
 }

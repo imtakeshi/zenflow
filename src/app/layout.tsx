@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ReminderProvider } from "@/components/ReminderProvider";
+import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 
 export const metadata: Metadata = {
   title: "ZenFlow — Дыхательные практики и медитации",
@@ -29,7 +30,10 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className="min-h-screen antialiased">
-        <ReminderProvider>{children}</ReminderProvider>
+        <ReminderProvider>
+          <ServiceWorkerRegistrar />
+          {children}
+        </ReminderProvider>
       </body>
     </html>
   );

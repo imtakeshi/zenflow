@@ -34,7 +34,7 @@ export default function CalendarPage() {
           Календарь медитаций
         </h1>
         <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">
-          Нажмите на день, чтобы посмотреть сессии, заметки и оценку. Сегодня можно отметить сессию вручную.
+          Нажмите на день, чтобы посмотреть сессии, заметки и оценку. Внутри дня можно отметить сессию вручную и быстро начать новую.
         </p>
 
         <div className="mb-4 flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
